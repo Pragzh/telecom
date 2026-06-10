@@ -1,0 +1,29 @@
+# Secrets — never commit these
+.env
+server/.env
+client/.env
+
+# Node modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Uploaded files — runtime data, not source code
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Vite build output
+client/dist/
+client/.vite/
+client/node_modules/.vite/
+
+# Large ML model files
+*.traineddata
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*touch server/uploads/.gitkeep
