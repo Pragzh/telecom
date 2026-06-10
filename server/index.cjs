@@ -72,6 +72,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "20mb" }));
 
 app.use(cookieParser());
