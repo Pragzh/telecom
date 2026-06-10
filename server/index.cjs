@@ -26,6 +26,10 @@ let payments = [];
 const app = express();
 
 const path = require("path");
+const uploadDir = path.join(__dirname, "uploads");
+if (!require("fs").existsSync(uploadDir)) {
+  require("fs").mkdirSync(uploadDir, { recursive: true });
+}
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
