@@ -15,6 +15,177 @@ const roleNames = {
   support: "General Support",
 };
 
+
+const responsiveStyles = `
+  * {
+    box-sizing: border-box;
+  }
+
+  .admin-mobile-menu-btn,
+  .admin-sidebar-close {
+    display: none !important;
+  }
+
+  @media (max-width: 900px) {
+    .admin-app {
+      display: block !important;
+    }
+
+    .admin-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      height: 100vh !important;
+      width: 280px !important;
+      max-width: 82vw !important;
+      transform: translateX(-105%) !important;
+      transition: transform 0.25s ease !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .admin-sidebar-open {
+      transform: translateX(0) !important;
+    }
+
+    .admin-sidebar-close,
+    .admin-mobile-menu-btn {
+      display: flex !important;
+    }
+
+    .admin-main {
+      width: 100% !important;
+      padding: 14px !important;
+    }
+
+    .admin-header {
+      padding: 14px !important;
+      gap: 12px !important;
+      align-items: center !important;
+      border-radius: 14px !important;
+    }
+
+    .admin-header h2 {
+      font-size: 18px !important;
+      line-height: 1.25 !important;
+    }
+
+    .admin-header p {
+      font-size: 12px !important;
+      word-break: break-word !important;
+    }
+
+    .admin-refresh-btn {
+      padding: 9px 12px !important;
+      white-space: nowrap !important;
+    }
+
+    .admin-stats-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important;
+    }
+
+    .admin-chat-layout {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    .admin-chat-list-panel {
+      height: auto !important;
+      max-height: 360px !important;
+    }
+
+    .admin-chat-window-panel {
+      height: 72vh !important;
+      min-height: 520px !important;
+    }
+
+    .admin-chat-header {
+      align-items: flex-start !important;
+      gap: 12px !important;
+      flex-direction: column !important;
+    }
+
+    .admin-chat-header-actions {
+      width: 100% !important;
+      justify-content: space-between !important;
+      flex-wrap: wrap !important;
+    }
+
+    .admin-message-bubble {
+      max-width: 88% !important;
+    }
+
+    .admin-reply-box {
+      flex-wrap: wrap !important;
+      align-items: center !important;
+    }
+
+    .admin-reply-input {
+      flex: 1 1 100% !important;
+      min-height: 70px !important;
+    }
+
+    .admin-send-btn {
+      width: 100% !important;
+      height: 46px !important;
+    }
+
+    .admin-table {
+      min-width: 760px !important;
+    }
+
+    .admin-filter-drawer {
+      width: calc(100vw - 20px) !important;
+      height: calc(100vh - 28px) !important;
+      max-width: calc(100vw - 20px) !important;
+    }
+
+    .admin-filter-body {
+      grid-template-columns: 140px 1fr !important;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .admin-stats-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .admin-header {
+      display: grid !important;
+      grid-template-columns: 42px 1fr auto !important;
+    }
+
+    .admin-chat-window-panel {
+      height: 70vh !important;
+      min-height: 500px !important;
+      padding: 12px !important;
+    }
+
+    .admin-filter-body {
+      grid-template-columns: 1fr !important;
+    }
+
+    .admin-filter-sidebar {
+      display: flex !important;
+      overflow-x: auto !important;
+      border-right: none !important;
+      border-bottom: 1px solid #dfe4ec !important;
+      padding: 8px !important;
+    }
+
+    .admin-filter-sidebar button {
+      min-width: max-content !important;
+      border-bottom: none !important;
+      padding: 12px 10px !important;
+    }
+
+    .admin-filter-footer {
+      padding: 10px 14px !important;
+      gap: 10px !important;
+    }
+  }
+`;
+
 export default function AdminDashboard() {
   const [admin, setAdmin] = useState(null);
   const [conversations, setConversations] = useState([]);
@@ -39,6 +210,7 @@ const [assigneeFilter, setAssigneeFilter] = useState([]);
 const [replyStatusFilter, setReplyStatusFilter] = useState([]);
 const [readFilter, setReadFilter] = useState([]);
 const [responseWindowFilter, setResponseWindowFilter] = useState([]);
+const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -105,6 +277,14 @@ const [responseWindowFilter, setResponseWindowFilter] = useState([]);
        socket.off("conversation_updated", handleUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sidebarOpen]);
 
   const logout = () => {
     localStorage.removeItem("admin");
@@ -337,10 +517,39 @@ const updateTicket = async (id, status) => {
 };
 
   return (
-    <div style={styles.app}>
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>LogonBroadband</h2>
-        <p style={styles.role}>{roleNames[admin.role]}</p>
+    <div style={styles.app} className="admin-app">
+      <style>{responsiveStyles}</style>
+
+      {sidebarOpen && (
+        <div
+          style={styles.mobileOverlay}
+          className="admin-mobile-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        style={{
+          ...styles.sidebar,
+          ...(sidebarOpen ? styles.sidebarOpen : {}),
+        }}
+        className={`admin-sidebar ${sidebarOpen ? "admin-sidebar-open" : ""}`}
+      >
+        <div style={styles.sidebarTop}>
+          <div>
+            <h2 style={styles.logo}>LogonBroadband</h2>
+            <p style={styles.role}>{roleNames[admin.role]}</p>
+          </div>
+
+          <button
+            type="button"
+            style={styles.sidebarCloseBtn}
+            className="admin-sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+          >
+            ×
+          </button>
+        </div>
 
         <div style={styles.menu}>
           {menuItems
@@ -357,6 +566,7 @@ const updateTicket = async (id, status) => {
                 onClick={() => {
                   setActiveTab(item.key);
                   setSelectedConversation(null);
+                  setSidebarOpen(false);
                 }}
               >
                 {item.label}
@@ -369,21 +579,29 @@ const updateTicket = async (id, status) => {
         </button>
       </aside>
 
-      <main style={styles.main}>
-        <header style={styles.header}>
+      <main style={styles.main} className="admin-main">
+        <header style={styles.header} className="admin-header">
+          <button
+            type="button"
+            style={styles.mobileMenuBtn}
+            className="admin-mobile-menu-btn"
+            onClick={() => setSidebarOpen(true)}
+          >
+            ☰
+          </button>
           <div>
             <h2 style={{ margin: 0 }}>{roleNames[admin.role]} Dashboard</h2>
             <p style={{ margin: "4px 0 0", color: "#777" }}>{admin.email}</p>
           </div>
 
-          <button style={styles.refreshBtn} onClick={fetchData}>
+          <button style={styles.refreshBtn} className="admin-refresh-btn" onClick={fetchData}>
             Refresh
           </button>
         </header>
 
         {activeTab === "dashboard" && (
           <>
-            <div style={styles.statsGrid}>
+            <div style={styles.statsGrid} className="admin-stats-grid">
               <StatCard
                 title="Assigned Chats"
                 value={visibleConversations.length}
@@ -409,8 +627,8 @@ const updateTicket = async (id, status) => {
         )}
 
         {activeTab === "chats" && (
-          <div style={styles.chatLayout}>
-            <div style={styles.chatListPanel}>
+          <div style={styles.chatLayout} className="admin-chat-layout">
+            <div style={styles.chatListPanel} className="admin-chat-list-panel">
               <div style={styles.chatListHeader}>
                 <h3 style={{ margin: 0 }}>Conversations</h3>
 
@@ -457,14 +675,14 @@ const updateTicket = async (id, status) => {
               ))}
             </div>
 
-            <div style={styles.chatWindowPanel}>
+            <div style={styles.chatWindowPanel} className="admin-chat-window-panel">
               {!selectedConversation ? (
                 <p style={styles.empty}>
                   Select a conversation to view full chat.
                 </p>
               ) : (
                 <>
-                  <div style={styles.chatHeader}>
+                  <div style={styles.chatHeader} className="admin-chat-header">
                     <div>
                       <h3 style={{ margin: 0 }}>
                         {selectedConversation.name}
@@ -474,7 +692,7 @@ const updateTicket = async (id, status) => {
                         {selectedConversation.phone}
                       </p>
                     </div>
-                    <div style={styles.chatHeaderActions}>
+                    <div style={styles.chatHeaderActions} className="admin-chat-header-actions">
                       <span style={styles.badge}>
                         {selectedConversation.category}
                       </span>
@@ -495,6 +713,7 @@ const updateTicket = async (id, status) => {
                     {selectedConversation.messages?.map((m, index) => (
                       <div
                         key={index}
+                        className="admin-message-bubble"
                         style={{
                           ...styles.messageBubble,
                           alignSelf:
@@ -552,9 +771,10 @@ const updateTicket = async (id, status) => {
                     ))}
                   </div>
 
-                <div style={styles.replyBox}>
+                <div style={styles.replyBox} className="admin-reply-box">
   <textarea
     style={styles.replyInput}
+    className="admin-reply-input"
     placeholder={`Reply as ${admin.name}`}
     value={replyText}
     onChange={(e) => setReplyText(e.target.value)}
@@ -604,7 +824,7 @@ const updateTicket = async (id, status) => {
     )}
   </div>
 
-  <button style={styles.sendBtn} onClick={sendReply}>
+  <button style={styles.sendBtn} className="admin-send-btn" onClick={sendReply}>
     Send Reply
   </button>
 </div>
@@ -759,7 +979,7 @@ function FilterModal({
 
   return (
     <div style={styles.filterOverlay}>
-      <div style={styles.filterDrawer}>
+      <div style={styles.filterDrawer} className="admin-filter-drawer">
         <div style={styles.filterTopBar}>
           <h2 style={styles.filterTitle}>Filters</h2>
 
@@ -768,8 +988,8 @@ function FilterModal({
           </button>
         </div>
 
-        <div style={styles.filterBody}>
-          <div style={styles.filterSidebar}>
+        <div style={styles.filterBody} className="admin-filter-body">
+          <div style={styles.filterSidebar} className="admin-filter-sidebar">
             {filterSections.map((section) => (
               <button
                 key={section.key}
@@ -835,7 +1055,7 @@ function FilterModal({
           </div>
         </div>
 
-        <div style={styles.filterFooter}>
+        <div style={styles.filterFooter} className="admin-filter-footer">
           <button style={styles.resetAllBtn} onClick={resetAllFilters}>
             Reset All
           </button>
@@ -875,7 +1095,7 @@ function ConversationTable({ conversations, onView }) {
   }
 
   return (
-    <table style={styles.table}>
+    <table style={styles.table} className="admin-table">
       <thead>
         <tr>
           <th style={styles.th}>CRM ID</th>
@@ -916,7 +1136,7 @@ function TicketTable({ tickets, onUpdateTicket }) {
   }
 
   return (
-    <table style={styles.table}>
+    <table style={styles.table} className="admin-table">
       <thead>
         <tr>
           <th style={styles.th}>Ticket ID</th>
@@ -968,7 +1188,7 @@ function PaymentTable({ payments, onUpdatePayment }) {
   }
 
   return (
-    <table style={styles.table}>
+    <table style={styles.table} className="admin-table">
       <thead>
         <tr>
           <th style={styles.th}>Payment ID</th>
@@ -1054,6 +1274,36 @@ const styles = {
     padding: "22px",
     display: "flex",
     flexDirection: "column",
+    flexShrink: 0,
+    zIndex: 100001,
+  },
+  sidebarOpen: {
+    transform: "translateX(0)",
+  },
+  mobileOverlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    zIndex: 100000,
+  },
+  sidebarTop: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: "12px",
+  },
+  sidebarCloseBtn: {
+    width: "36px",
+    height: "36px",
+    border: "none",
+    borderRadius: "10px",
+    background: "#f1f5f9",
+    color: "#111827",
+    cursor: "pointer",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "26px",
+    lineHeight: 1,
   },
   logo: {
     margin: 0,
@@ -1090,6 +1340,7 @@ const styles = {
     flex: 1,
     padding: "26px",
     overflowY: "auto",
+    minWidth: 0,
   },
   header: {
     background: "white",
@@ -1100,6 +1351,20 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+  },
+  mobileMenuBtn: {
+    border: "none",
+    background: "#185FA5",
+    color: "white",
+    width: "42px",
+    height: "42px",
+    borderRadius: "10px",
+    fontSize: "22px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
   },
   refreshBtn: {
     padding: "10px 18px",
