@@ -21,36 +21,47 @@ const responsiveStyles = `
     box-sizing: border-box;
   }
 
-  .admin-mobile-menu-btn,
-  .admin-sidebar-close {
-    display: none !important;
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .admin-app {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 280px !important;
+    max-width: 82vw !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.25s ease !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .admin-sidebar-open {
+    transform: translateX(0) !important;
+  }
+
+  .admin-sidebar-close,
+  .admin-mobile-menu-btn {
+    display: flex !important;
+  }
+
+  .admin-main {
+    width: 100% !important;
+    max-width: 100vw !important;
   }
 
   @media (max-width: 900px) {
-    .admin-app {
-      display: block !important;
-    }
-
-    .admin-sidebar {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      height: 100vh !important;
-      width: 280px !important;
-      max-width: 82vw !important;
-      transform: translateX(-105%) !important;
-      transition: transform 0.25s ease !important;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
-    }
-
-    .admin-sidebar-open {
-      transform: translateX(0) !important;
-    }
-
-    .admin-sidebar-close,
-    .admin-mobile-menu-btn {
-      display: flex !important;
-    }
 
     .admin-main {
       width: 100% !important;
@@ -1263,12 +1274,16 @@ function PaymentTable({ payments, onUpdatePayment }) {
 const styles = {
   app: {
     minHeight: "100vh",
-    display: "flex",
+    width: "100%",
+    maxWidth: "100vw",
+    display: "block",
     background: "#f5f7fb",
     fontFamily: "Arial, sans-serif",
+    overflowX: "hidden",
   },
   sidebar: {
-    width: "250px",
+    width: "280px",
+    maxWidth: "82vw",
     background: "white",
     borderRight: "1px solid #e5e7eb",
     padding: "22px",
@@ -1276,6 +1291,13 @@ const styles = {
     flexDirection: "column",
     flexShrink: 0,
     zIndex: 100001,
+    position: "fixed",
+    top: 0,
+    left: 0,
+    height: "100vh",
+    transform: "translateX(-105%)",
+    transition: "transform 0.25s ease",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
   },
   sidebarOpen: {
     transform: "translateX(0)",
@@ -1293,6 +1315,7 @@ const styles = {
     gap: "12px",
   },
   sidebarCloseBtn: {
+    display: "flex",
     width: "36px",
     height: "36px",
     border: "none",
@@ -1338,8 +1361,11 @@ const styles = {
   },
   main: {
     flex: 1,
+    width: "100%",
+    maxWidth: "100vw",
     padding: "26px",
     overflowY: "auto",
+    overflowX: "hidden",
     minWidth: 0,
   },
   header: {
@@ -1353,6 +1379,7 @@ const styles = {
     boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
   },
   mobileMenuBtn: {
+    display: "flex",
     border: "none",
     background: "#185FA5",
     color: "white",
@@ -1850,5 +1877,122 @@ removeFileBtn: {
   color: "#b42318",
   fontWeight: "bold",
   fontSize: "14px",
+},
+app: {
+  minHeight: "100vh",
+  width: "100%",
+  maxWidth: "100vw",
+  display: "block",
+  background: "#f5f7fb",
+  fontFamily: "Arial, sans-serif",
+  overflowX: "hidden",
+},
+
+main: {
+  flex: 1,
+  width: "100%",
+  maxWidth: "100vw",
+  minWidth: 0,
+  padding: window.innerWidth <= 768 ? "12px" : "26px",
+  overflowY: "auto",
+  overflowX: "hidden",
+},
+
+header: {
+  background: "white",
+  padding: window.innerWidth <= 768 ? "14px" : "20px",
+  borderRadius: "16px",
+  marginBottom: "16px",
+  display: "flex",
+  gap: "10px",
+  justifyContent: "space-between",
+  alignItems: "center",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+},
+
+statsGrid: {
+  display: "grid",
+  gridTemplateColumns: window.innerWidth <= 768 ? "1fr 1fr" : "repeat(4, 1fr)",
+  gap: "12px",
+  marginBottom: "16px",
+},
+
+section: {
+  background: "white",
+  padding: window.innerWidth <= 768 ? "14px" : "20px",
+  borderRadius: "16px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+  marginBottom: "16px",
+  overflowX: "auto",
+  maxWidth: "100%",
+},
+
+table: {
+  width: "100%",
+  minWidth: window.innerWidth <= 768 ? "720px" : "100%",
+  borderCollapse: "collapse",
+  fontSize: "14px",
+},
+
+chatLayout: {
+  display: "grid",
+  gridTemplateColumns: window.innerWidth <= 768 ? "1fr" : "340px 1fr",
+  gap: "14px",
+  maxWidth: "100%",
+},
+
+chatListPanel: {
+  background: "white",
+  borderRadius: "16px",
+  padding: "14px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+  height: window.innerWidth <= 768 ? "280px" : "calc(100vh - 130px)",
+  overflowY: "auto",
+},
+
+chatWindowPanel: {
+  background: "white",
+  borderRadius: "16px",
+  padding: "14px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+  height: window.innerWidth <= 768 ? "calc(100vh - 430px)" : "calc(100vh - 130px)",
+  minHeight: window.innerWidth <= 768 ? "420px" : "auto",
+  display: "flex",
+  flexDirection: "column",
+},
+
+messageBubble: {
+  maxWidth: window.innerWidth <= 768 ? "88%" : "70%",
+  padding: "10px 12px",
+  borderRadius: "12px",
+  fontSize: "14px",
+},
+
+replyBox: {
+  display: "flex",
+  gap: "8px",
+  marginTop: "12px",
+  flexWrap: "wrap",
+},
+
+replyInput: {
+  flex: "1 1 100%",
+  minHeight: "55px",
+  padding: "12px",
+  borderRadius: "10px",
+  border: "1px solid #ddd",
+  resize: "none",
+  fontFamily: "Arial, sans-serif",
+},
+
+sendBtn: {
+  flex: window.innerWidth <= 768 ? "1 1 100%" : "0 0 130px",
+  height: "46px",
+  border: "none",
+  borderRadius: "10px",
+  background: "#185FA5",
+  color: "white",
+  fontWeight: "bold",
+  cursor: "pointer",
 },
 };
