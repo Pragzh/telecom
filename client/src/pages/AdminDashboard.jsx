@@ -21,18 +21,15 @@ const responsiveStyles = `
     box-sizing: border-box;
   }
 
-  html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
   .admin-app {
     display: block !important;
-    width: 100% !important;
-    max-width: 100vw !important;
+    width: 100vw !important;
     overflow-x: hidden !important;
+  }
+
+  .admin-mobile-menu-btn,
+  .admin-sidebar-close {
+    display: flex !important;
   }
 
   .admin-sidebar {
@@ -51,17 +48,35 @@ const responsiveStyles = `
     transform: translateX(0) !important;
   }
 
-  .admin-sidebar-close,
-  .admin-mobile-menu-btn {
-    display: flex !important;
-  }
-
   .admin-main {
     width: 100% !important;
-    max-width: 100vw !important;
   }
 
   @media (max-width: 900px) {
+    .admin-app {
+      display: block !important;
+    }
+
+    .admin-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      height: 100vh !important;
+      width: 280px !important;
+      max-width: 82vw !important;
+      transform: translateX(-105%) !important;
+      transition: transform 0.25s ease !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .admin-sidebar-open {
+      transform: translateX(0) !important;
+    }
+
+    .admin-sidebar-close,
+    .admin-mobile-menu-btn {
+      display: flex !important;
+    }
 
     .admin-main {
       width: 100% !important;
@@ -1274,12 +1289,9 @@ function PaymentTable({ payments, onUpdatePayment }) {
 const styles = {
   app: {
     minHeight: "100vh",
-    width: "100%",
-    maxWidth: "100vw",
-    display: "block",
+    display: "flex",
     background: "#f5f7fb",
     fontFamily: "Arial, sans-serif",
-    overflowX: "hidden",
   },
   sidebar: {
     width: "280px",
@@ -1361,11 +1373,8 @@ const styles = {
   },
   main: {
     flex: 1,
-    width: "100%",
-    maxWidth: "100vw",
     padding: "26px",
     overflowY: "auto",
-    overflowX: "hidden",
     minWidth: 0,
   },
   header: {
@@ -1880,8 +1889,7 @@ removeFileBtn: {
 },
 app: {
   minHeight: "100vh",
-  width: "100%",
-  maxWidth: "100vw",
+  width: "100vw",
   display: "block",
   background: "#f5f7fb",
   fontFamily: "Arial, sans-serif",
@@ -1891,7 +1899,6 @@ app: {
 main: {
   flex: 1,
   width: "100%",
-  maxWidth: "100vw",
   minWidth: 0,
   padding: window.innerWidth <= 768 ? "12px" : "26px",
   overflowY: "auto",
