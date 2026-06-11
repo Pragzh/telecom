@@ -108,3 +108,106 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+@media (max-width: 767px) {
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 250px !important;
+    z-index: 999 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.25s ease !important;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .admin-sidebar-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.45) !important;
+    z-index: 998 !important;
+  }
+
+  .admin-hamburger {
+    display: inline-block !important;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .admin-chat-layout {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+
+  .admin-chat-list-panel {
+    max-height: 35vh !important;
+    height: auto !important;
+  }
+
+  .admin-chat-window-panel {
+    height: auto !important;
+    min-height: 55vh !important;
+  }
+
+  .admin-messages-box {
+    max-height: 35vh !important;
+  }
+
+  .admin-main {
+    padding: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    position: relative !important;
+    transform: translateX(0) !important;
+    height: 100vh !important;
+    flex-shrink: 0 !important;
+  }
+
+  .admin-hamburger {
+    display: none !important;
+  }
+
+  .admin-sidebar-overlay {
+    display: none !important;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .admin-chat-layout {
+    display: grid !important;
+    grid-template-columns: 320px 1fr !important;
+  }
+
+  .admin-chat-list-panel {
+    height: calc(100vh - 130px) !important;
+    max-height: calc(100vh - 130px) !important;
+    overflow-y: auto !important;
+  }
+
+  .admin-chat-window-panel {
+    height: calc(100vh - 130px) !important;
+  }
+
+  .admin-messages-box {
+    max-height: unset !important;
+    flex: 1 !important;
+  }
+
+  .admin-main {
+    padding: 26px !important;
+  }
+}
