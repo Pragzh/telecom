@@ -181,4 +181,7 @@
     right: 0;
     border-right-color: var(--border);
   }
+  html, body, #root {
+  background: transparent !important;
+}
 }
