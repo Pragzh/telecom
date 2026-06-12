@@ -142,19 +142,21 @@ const responsiveStyles = `
     }
 
     .admin-reply-box {
-      flex-wrap: wrap !important;
-      align-items: center !important;
-    }
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
 
-    .admin-reply-input {
-      flex: 1 1 100% !important;
-      min-height: 70px !important;
-    }
+.admin-reply-input {
+  flex: 1 !important;
+  height: 58px !important;
+  min-height: 58px !important;
+}
 
-    .admin-send-btn {
-      width: 100% !important;
-      height: 46px !important;
-    }
+.admin-send-btn {
+  width: 150px !important;
+  height: 58px !important;
+  flex-shrink: 0 !important;
+}
 
     .admin-table {
       min-width: 760px !important;
