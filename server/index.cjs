@@ -635,6 +635,7 @@ If it is any other image (router, device, error screen, cable, etc.):
     // --- ANY OTHER IMAGE ---
    // --- ANY OTHER IMAGE ---
 // --- ANY OTHER IMAGE ---
+// --- ANY OTHER IMAGE ---
 const uploadedMessage = {
   from: "user",
   text: `Uploaded image: ${req.file.originalname}`,
@@ -674,6 +675,12 @@ if (conversation) {
   });
   io.emit("new_conversation", conversation);
 }
+
+io.emit("admin_reply", {
+  conversationId: conversation.id || conversation._id,
+  crmId: conversation.crmId,
+  message: botMessage,
+});
 
 io.emit("new_message", {
   conversationId: conversation.id || conversation._id,
