@@ -25,6 +25,8 @@ const customerRef = useRef(null);
   const cameraRef = useRef(null);
   const galleryRef = useRef(null);
 
+
+
   useEffect(() => {
     if (bodyRef.current) {
       bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
@@ -44,7 +46,9 @@ useEffect(() => {
   return () => socket.off("admin_reply", handleAdminReply);
 }, []);
 
-
+useEffect(() => {
+  window.parent.postMessage({ type: "chatbot-resize", open }, "*");
+}, [open]);
   const verifyCustomer = async () => {
   if (!phone.trim()) return alert("Please enter mobile number");
 
