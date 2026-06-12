@@ -652,18 +652,33 @@ const botMessage = {
   createdAt: new Date(),
 };
 
-const conversation = await Conversation.create({
-  id: "CONV-" + Date.now(),
+let conversation = await Conversation.findOne({
   crmId,
-  phone,
-  name: "Customer",
-  category: "Image Support",
-  assignedTo: "tech",
-  status: "assigned",
-  messages: [uploadedMessage, botMessage],
-});
+  status: { $ne: "closed" },
+}).sort({ createdAt: -1 });
 
-io.emit("new_conversation", conversation);
+if (conversation) {
+  conversation.messages.push(uploadedMessage, botMessage);
+  await conversation.save();
+  io.emit("conversation_updated", conversation);
+} else {
+  conversation = await Conversation.create({
+    id: "CONV-" + Date.now(),
+    crmId,
+    phone,
+    name: "Customer",
+    category: "Image Support",
+    assignedTo: "tech",
+    status: "assigned",
+    messages: [uploadedMessage, botMessage],
+  });
+  io.emit("new_conversation", conversation);
+}
+
+io.emit("new_message", {
+  conversationId: conversation.id || conversation._id,
+  message: botMessage,
+});
 
 return res.json({
   success: true,
