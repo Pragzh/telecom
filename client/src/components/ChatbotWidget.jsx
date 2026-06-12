@@ -49,6 +49,7 @@ useEffect(() => {
 useEffect(() => {
   window.parent.postMessage({ type: "chatbot-resize", open }, "*");
 }, [open]);
+
   const verifyCustomer = async () => {
   if (!phone.trim()) return alert("Please enter mobile number");
 
@@ -327,6 +328,10 @@ useEffect(() => {
     : { from: "bot", text: res.data.reply },
 ];
     });
+    if (res.data.type === "other") {
+  setSelectedIssue("Technical Issue");
+  setTroubleshootText(res.data.reply);
+}
   } catch (err) {
     console.log(err);
     alert("Image scan failed");
